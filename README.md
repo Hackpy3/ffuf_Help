@@ -1,5 +1,142 @@
 # ffuf_Help
+FFUF (Fuzz Faster U Fool) offers several filter options to refine the results of fuzzing. Filters help you focus on relevant findings by eliminating responses that match certain criteria. Here's a detailed breakdown of FFUF filter options with examples:
 
+---
+
+### **Common FFUF Filter Options**
+1. **`-fc` (Filter by Status Code)**  
+   Excludes responses with specific HTTP status codes.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -fc 404
+     ```
+     Excludes results with a 404 (Not Found) status code.
+
+   - **Multiple Status Codes**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -fc 403,404,500
+     ```
+     Filters out 403, 404, and 500 status codes.
+
+---
+
+2. **`-mc` (Match by Status Code)**  
+   Includes only responses with specific HTTP status codes.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -mc 200
+     ```
+     Displays only responses with a 200 (OK) status code.
+
+   - **Multiple Status Codes**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -mc 200,301,302
+     ```
+     Displays responses with status codes 200, 301, or 302.
+
+---
+
+3. **`-fs` (Filter by Response Size)**  
+   Excludes responses with a specific size (in bytes).  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -fs 0
+     ```
+     Filters out responses with a size of 0 bytes (empty responses).
+
+   - **Range Filtering** (not supported directly, but you can chain runs):  
+     Combine with tools like `grep` if filtering by a range is needed.
+
+---
+
+4. **`-ms` (Match by Response Size)**  
+   Includes only responses with a specific size.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -ms 1234
+     ```
+     Displays only responses that are 1234 bytes in size.
+
+---
+
+5. **`-fw` (Filter by Word Count)**  
+   Excludes responses with a specific word count.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -fw 5
+     ```
+     Filters out responses with exactly 5 words.
+
+---
+
+6. **`-mw` (Match by Word Count)**  
+   Includes only responses with a specific word count.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -mw 20
+     ```
+     Displays only responses with 20 words.
+
+---
+
+7. **`-fl` (Filter by Line Count)**  
+   Excludes responses with a specific number of lines.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -fl 10
+     ```
+     Filters out responses that have exactly 10 lines.
+
+---
+
+8. **`-ml` (Match by Line Count)**  
+   Includes only responses with a specific number of lines.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -ml 15
+     ```
+     Displays only responses that have 15 lines.
+
+---
+
+9. **Combining Filters**  
+   Multiple filters can be combined to refine results further.  
+   - **Example**:  
+     ```bash
+     ffuf -u http://example.com/FUZZ -w wordlist.txt -fc 404 -fs 0 -fw 5
+     ```
+     Excludes:
+     - Responses with a 404 status code.
+     - Responses with 0 bytes.
+     - Responses with 5 words.
+
+---
+
+### **Practical Scenarios**
+#### **1. Finding Only Valid Directories**
+- Goal: Display only directories with status code 200.  
+  - Command:
+    ```bash
+    ffuf -u http://example.com/FUZZ/ -w wordlist.txt -mc 200 -ml 10
+    ```
+
+#### **2. Identifying Hidden Admin Panels**
+- Goal: Ignore 404 pages and focus on responses with unique content.  
+  - Command:
+    ```bash
+    ffuf -u http://example.com/FUZZ -w wordlist.txt -fc 404 -fs 0
+    ```
+
+#### **3. Recursive Fuzzing with Filters**
+- Goal: Find directories recursively, filtering out 403 errors.  
+  - Command:
+    ```bash
+    ffuf -u http://example.com/FUZZ -w wordlist.txt -recursion -recursion-depth 2 -fc 403
+    ```
+
+---
+
+By using FFUF's filters strategically, you can cut through noise and focus on results that matter most during fuzzing.
 
 
 
